@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>VibeDock · 在线交互演示</title><meta name="description" content="体验 VibeDock 四区任务圆屏、待处理列表、模拟审批与用量展示。所有数据均为示例，不连接真实 AI 客户端。"><meta name="robots" content="noindex,nofollow"><link rel="stylesheet" href="./style.css"><script type="module" src="./app.js"></script></head>
+<body>
+<header><a class="brand" href="./" aria-label="VibeDock 工作台"><span class="brand-mark">v.</span>VibeDock<span class="version">ONLINE DEMO / 0.3</span></a><div class="header-actions"><span id="service" class="connection">演示加载中…</span><button id="settingsButton" class="quiet">演示说明</button></div></header>
+<main><aside class="share-notice"><b>在线交互演示 · 全部为模拟数据</b><span>可体验四区、待处理、模拟审批与断连恢复。不会连接真实 Codex / WorkBuddy，也不会录音或执行命令。</span></aside>
+ <div class="intro"><div><p class="eyebrow">A LITTLE WINDOW INTO YOUR WORK</p><h1>把进展，放在手边。</h1><p class="subtitle">四个任务，一个圆屏。需要你时，轻触回应。</p></div><div class="tool-switch" aria-label="选择工具"><button data-tool="codex" aria-pressed="true">⌘ &nbsp; Codex</button><button data-tool="workbuddy" aria-pressed="false">w &nbsp; WorkBuddy</button></div></div>
+ <div id="offline" class="notice" hidden>连接已断开，显示最后快照。恢复同步后才能操作。</div>
+ <div class="workspace">
+  <section class="device-stage" aria-label="圆形吧唧模拟器">
+   <div class="stage-head"><span class="micro">VIBEDOCK / DEVICE SIMULATOR</span><span id="deviceStatus" class="connection">模拟设备在线</span></div>
+   <div class="badge"><div id="screen" class="screen" aria-live="polite"><div class="empty">正在同步…</div></div></div>
+   <nav class="device-nav" aria-label="圆屏页面"><button data-screen="tasks" class="active">四区</button><button data-screen="attention" id="deviceAttention">待处理</button><button data-screen="voice">语音</button><button data-screen="usage">用量</button></nav>
+   <div class="legend"><span><i class="running"></i>执行</span><span><i class="waiting"></i>待介入</span><span><i class="completed"></i>完成</span><span><i class="failed"></i>异常</span><span><i class="unknown"></i>未知</span></div>
+   <p id="screenHint" class="stage-caption">同一浏览器中的圆屏与工作台会同步。</p>
+   <div class="stage-foot"><button id="deviceToggle" class="link">模拟断连</button><a href="./?view=device" target="_blank" rel="noopener">独立圆屏 ↗</a><span id="packetVersion">PROTOCOL / V1</span></div>
+  </section>
+  <div class="right">
+   <div class="source-bar"><div><b id="toolName">Codex</b><span id="sourceBadge" class="source-badge">连接中</span></div><div class="source-controls"><label for="mode">数据来源</label><select id="mode" aria-label="数据来源"><option value="demo">模拟演示</option></select><button id="refresh" class="quiet">同步 ↻</button></div></div>
+   <p id="sourceNote" class="source-note"></p>
+   <section id="attentionCard" class="attention-card" aria-label="待处理任务" hidden><div class="card-head"><h2 id="attentionTitle">需要你看一下</h2><span id="attentionScope" class="micro"></span></div><div id="attentionList" class="attention-list"></div></section>
+   <div class="stats"><div class="stat"><span>执行中</span><strong id="runningCount">—</strong><small id="runningHint">当前四个槽位</small></div><div class="stat"><span>待介入</span><strong id="waitingCount">—</strong><small id="waitingHint">需要你的回应</small></div><button id="usageCard" class="stat usage-stat"><span id="usageLabel">剩余额度</span><strong id="tokens">—</strong><small id="tokenHint">等待数据</small></button></div>
+   <section class="card"><div class="card-head"><h2>手边的任务 <span id="taskCount" class="micro">/ 04</span></h2><button id="latest" class="link">换为最近四项 ↻</button></div><div id="tasks" class="task-list"></div></section>
+   <section id="detailCard" class="card"><div class="card-head"><h2>任务详情</h2><span id="detailSource" class="micro"></span></div><div id="detail" class="detail-content"></div></section>
+   <div class="bottom-status"><span id="synced">等待同步</span><span>语音入口仅模拟，不录音</span></div>
+  </div>
+ </div>
+ <section id="devSection" class="dev-section"><div class="dev-title"><div><p class="eyebrow">PC ↔ BADGE</p><h2>交互体验台</h2></div><p>点击下方按钮，观察四区与详情变化。</p><button id="resetDemo" class="quiet">重置模拟场景</button></div><div class="dev-grid"><div class="scenario"><h3>改变所选模拟任务</h3><div class="scenario-buttons"><button data-scenario="running">执行中</button><button data-scenario="waiting">请求审批</button><button data-scenario="completed">已完成</button><button data-scenario="failed">异常</button></div><p>仅改变本浏览器的模拟状态，不影响其他访客。</p><div id="capabilities"></div></div><div id="events" class="events" aria-label="协议事件记录"></div></div></section>
+</main>
+<footer><span>VibeDock / 电脑负责上下文，圆屏负责触达。</span><span>示例数据 · 浏览器内演示 · 无真实客户端连接</span></footer>
+<dialog id="confirmDialog"><p class="eyebrow">REVIEW / ONE REQUEST</p><h2 id="confirmTitle">确认本次操作</h2><p id="confirmTask"></p><pre id="confirmCommand"></pre><p id="confirmScope" class="muted"></p><p class="muted">当前为模拟审批，不执行实际命令。收到适配器回执后更新状态。</p><div class="actions"><button id="confirmAction" class="primary">确认</button><button data-close="confirmDialog" class="secondary">返回</button></div></dialog>
+<dialog id="settingsDialog"><p class="eyebrow">ABOUT THIS DEMO</p><h2>这是一份可交互的产品演示</h2><p>选择 Codex 或 WorkBuddy，点击黄色分区，体验核对请求、模拟批准或拒绝，以及状态同步。用下方交互体验台切换执行、完成和异常状态。</p><div class="setting-block"><h3>当前演示范围</h3><p>全部任务、Token 和额度均为示例。批准、打开任务和语音只返回模拟结果，不执行命令、不启动原客户端、不录音。</p></div><div class="setting-block"><h3>每位访客独立体验</h3><p>状态仅保存在当前浏览器。同一浏览器的工作台与独立圆屏可同步，其他访客不会看到你的操作。可以随时重置模拟场景。</p></div><div class="setting-block"><h3>PC 软件与硬件的进度</h3><p>PC 本机版已接入部分任务状态和 Codex 用量。WorkBuddy 新任务实时状态、精确任务跳转和真实审批闭环仍待验收；原生语音、蓝牙及固件尚未交付。在线演示不等于这些能力已完成。</p></div><button data-close="settingsDialog" class="secondary">开始体验</button></dialog>
+<dialog id="usageDialog"><p class="eyebrow">USAGE / CURRENT TOOL</p><h2>用量与账户额度</h2><div id="usageDetail"></div><button data-close="usageDialog" class="secondary">关闭</button></dialog>
+<div id="toast" class="toast" role="status" hidden></div>
+</body></html>
